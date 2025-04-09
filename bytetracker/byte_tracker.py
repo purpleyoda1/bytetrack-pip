@@ -186,7 +186,7 @@ class STrack(BaseTrack):
 
 class BYTETracker(object):
     def __init__(
-        self, track_thresh=0.45, track_buffer=25, match_thresh=0.8, frame_rate=30
+        self, track_thresh=0.45, track_buffer=25, match_thresh=0.8, frame_rate=30, keep_frames=5
     ):
         self.tracked_stracks = []  # type: list[STrack]
         self.lost_stracks = []  # type: list[STrack]
@@ -202,6 +202,7 @@ class BYTETracker(object):
         self.buffer_size = int(frame_rate / 30.0 * track_buffer)
         self.max_time_lost = self.buffer_size
         self.kalman_filter = KalmanFilter()
+        self.keep_frames = keep_frames
 
     def update(self, dets, _ = None):
         self.frame_id += 1
@@ -363,6 +364,11 @@ class BYTETracker(object):
         )
         # get scores of lost tracks
         output_stracks = [track for track in self.tracked_stracks if track.is_activated]
+
+        # --------- CUSTOM OUTPUT --------- #
+        lost_but_keep = [track for track in self.lost_stracks if self.frame_id-track.end_frame <= self.keep_frames]
+        output_stracks.extend(lost_but_keep)
+
         outputs = []
         for t in output_stracks:
             output = []
