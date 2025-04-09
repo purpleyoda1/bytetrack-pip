@@ -47,10 +47,10 @@ def tlwh2xyxy(x):
         y = x.clone()
     except:
         y = np.copy(x)
-    y[:, 0] = x[:, 0] + x[:, 2] # top
-    y[:, 1] = x[:, 1] + x[:, 3] # left
-    y[:, 2] = x[:, 0] + x[:, 2] + x[:, 2] # width
-    y[:, 3] = x[:, 1] + x[:, 3] + x[:, 3] # height
+    y[:, 0] = x[:, 0]  # top
+    y[:, 1] = x[:, 1]  # left
+    y[:, 2] = x[:, 0] + x[:, 2]  # width
+    y[:, 3] = x[:, 1] + x[:, 3]  # height
     return y
 
 
@@ -397,7 +397,7 @@ class BYTETracker(object):
 
         outputs = np.array(outputs)
 
-        return outputs
+        return None
 
 
 def joint_stracks(tlista, tlistb):
