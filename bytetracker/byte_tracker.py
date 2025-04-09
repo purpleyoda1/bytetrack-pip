@@ -397,7 +397,7 @@ class BYTETracker(object):
 
         outputs = np.array(outputs)
 
-        return None
+        return outputs
 
 
 def joint_stracks(tlista, tlistb):
