@@ -41,6 +41,18 @@ def xyxy2ltwh(x):
     y[:, 3] = x[:, 3] - x[:, 1]  # height
     return y
 
+def tlwh2xyxy(x):
+    # Convert from [t, l, w, h] to [x1, y1, x2, y2]
+    try:
+        y = x.clone()
+    except:
+        y = np.copy(x)
+    y[:, 0] = x[:, 0] # top
+    y[:, 1] = x[:, 1]   # left
+    y[:, 2] = x[:, 0] + x[:, 2]  # width
+    y[:, 3] = x[:, 1] + x[:, 3]  # height
+    return y
+
 
 class STrack(BaseTrack):
     shared_kalman = KalmanFilter()
@@ -375,7 +387,7 @@ class BYTETracker(object):
             tlwh = t.tlwh
             tid = t.track_id
             tlwh = np.expand_dims(tlwh, axis=0)
-            xyxy = xywh2xyxy(tlwh)
+            xyxy = tlwh2xyxy(tlwh)
             xyxy = np.squeeze(xyxy, axis=0)
             output.extend(xyxy)
             output.append(tid)
